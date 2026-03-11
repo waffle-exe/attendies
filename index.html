@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Romantic Star Party Night</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600&family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=Montserrat:wght@300;400&display=swap" rel="stylesheet">
+    <style>
+        /* Fallback background in case the video doesn't load */
+        body {
+            background: radial-gradient(ellipse at bottom, #1b2735 0%, #090a0f 100%);
+            color: white;
+            font-family: 'Montserrat', sans-serif;
+            overflow: hidden;
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        h1, h2, h3, .serif-font {
+            font-family: 'Cormorant Garamond', serif;
+        }
+
+        .title-font {
+            font-family: 'Cinzel', serif;
+        }
+
+        /* Video styling to make it cover the background beautifully */
+        #background-video {
+            position: fixed;
+            right: 0;
+            bottom: 0;
+            min-width: 100%;
+            min-height: 100%;
+            z-index: -1;
+            object-fit: cover;
+            opacity: 0.6; /* Slight opacity to make text readable */
+            filter: brightness(0.7) contrast(1.2);
+        }
+
+        /* Glassmorphism container */
+        .glass-panel {
+            background: rgba(15, 23, 42, 0.4);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.5);
+            transition: all 0.8s ease-in-out;
+        }
+
+        /* Glowing text effect */
+        .text-glow {
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.5), 0 0 20px rgba(167, 139, 250, 0.4);
+        }
+
+        /* Custom Input Styling */
+        input[type="text"], input[type="date"] {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: white;
+            color-scheme: dark;
+        }
+        
+        input[type="text"]:focus, input[type="date"]:focus {
+            outline: none;
+            border-color: rgba(167, 139, 250, 0.8);
+            box-shadow: 0 0 10px rgba(167, 139, 250, 0.3);
+        }
+
+        /* Animations */
+        .fade-out {
+            opacity: 0;
+            visibility: hidden;
+            transform: scale(0.95) translateY(20px);
+        }
+        
+        .fade-in {
+            opacity: 1;
+            visibility: visible;
+            transform: scale(1) translateY(0);
+        }
+
+        /* Twinkling stars effect for fallback */
+        .stars {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -2;
+            background: transparent url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="200" height="200"><circle cx="10" cy="10" r="1" fill="white" opacity="0.8"/><circle cx="80" cy="50" r="1.5" fill="white" opacity="0.6"/><circle cx="150" cy="120" r="0.5" fill="white" opacity="0.9"/><circle cx="40" cy="180" r="1" fill="white" opacity="0.5"/></svg>') repeat;
+            animation: twinkle 15s linear infinite;
+        }
+
+        @keyframes twinkle {
+            from { background-position: 0 0; }
+            to { background-position: -200px 200px; }
+        }
+
+        /* Shooting Stars */
+        .shooting-star {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 120px;
+            height: 2px;
+            background: linear-gradient(90deg, rgba(255,255,255,1) 0%, rgba(255,255,255,0) 100%);
+            border-radius: 999px;
+            filter: drop-shadow(0 0 6px rgba(255,255,255,1));
+            animation: shoot 4s linear infinite;
+            opacity: 0;
+            z-index: -1;
+        }
+
+        .shooting-star::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 1);
+            box-shadow: 0 0 15px 3px rgba(255, 255, 255, 0.8), 0 0 30px 6px rgba(167, 139, 250, 0.6);
+        }
+
+        .star-1 { top: 10%; left: 80%; animation-delay: 0s; transform: rotate(-45deg); }
+        .star-2 { top: 30%; left: 10%; animation-delay: 2.4s; transform: rotate(30deg); }
+        .star-3 { top: 70%; left: 60%; animation-delay: 5s; transform: rotate(-25deg); }
+
+        @keyframes shoot {
+            0% { transform: translateX(0) translateY(0) rotate(-45deg); opacity: 0; }
+            10% { opacity: 1; }
+            20% { transform: translateX(-500px) translateY(500px) rotate(-45deg); opacity: 0; }
+            100% { transform: translateX(-500px) translateY(500px) rotate(-45deg); opacity: 0; }
+        }
+    </style>
+</head>
+<body class="antialiased">
+
+    <!-- Background Video -->
+    <video autoplay muted loop id="background-video">
+        <source src="background.mp4" type="video/mp4">
+        Your browser does not support the video tag.
+    </video>
+
+    <!-- Background Music -->
+    <audio id="background-music" loop>
+        <source src="terebin.mp3" type="audio/mpeg">
+        Your browser does not support the audio element.
+    </audio>
+
+    <!-- CSS Stars (Visible if video fails or has low opacity) -->
+    <div class="stars"></div>
+
+    <!-- Shooting Stars -->
+    <div class="shooting-star star-1"></div>
+    <div class="shooting-star star-2"></div>
+    <div class="shooting-star star-3"></div>
+
+    <!-- Main Container -->
+    <div class="relative w-full max-w-2xl px-4 flex justify-center items-center min-h-screen">
+        
+        <!-- Entry Screen -->
+        <div id="entry-screen" class="glass-panel w-full p-10 md:p-14 rounded-3xl text-center absolute transition-all duration-1000 z-10 fade-in">
+            <h1 class="title-font text-4xl md:text-5xl lg:text-6xl mb-2 text-glow tracking-widest text-indigo-100">Star Party</h1>
+            <p class="serif-font text-xl md:text-2xl italic text-indigo-200 mb-10 tracking-wide">A Night Under the Cosmos</p>
+            
+            <div class="space-y-6 max-w-sm mx-auto">
+                <div>
+                    <label for="name" class="block text-left text-sm font-light text-indigo-200 mb-2 tracking-wider">YOUR NAME</label>
+                    <input type="text" id="name" placeholder="Enter your name" class="w-full px-4 py-3 rounded-xl transition-all duration-300 backdrop-blur-sm" required>
+                </div>
+                <div>
+                    <label for="dob" class="block text-left text-sm font-light text-indigo-200 mb-2 tracking-wider">YOUR DATE OF BIRTH</label>
+                    <input type="date" id="dob" class="w-full px-4 py-3 rounded-xl transition-all duration-300 backdrop-blur-sm" required>
+                </div>
+                
+                <p id="error-msg" class="text-rose-400 text-sm hidden mt-2 italic serif-font">Please tell the stars your name and birth date.</p>
+
+                <button onclick="enterParty()" class="w-full mt-8 relative inline-flex items-center justify-center px-8 py-3.5 text-base font-medium tracking-widest text-white transition-all duration-300 bg-indigo-600/60 border border-indigo-400/50 rounded-xl hover:bg-indigo-500/80 hover:shadow-[0_0_20px_rgba(99,102,241,0.5)] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 title-font uppercase">
+                    Enter the Stars
+                </button>
+            </div>
+        </div>
+
+        <!-- Party/Astronomy Screen -->
+        <div id="party-screen" class="glass-panel w-full p-8 md:p-10 rounded-3xl text-center absolute transition-all duration-1000 z-0 fade-out flex flex-col items-center justify-center">
+            
+            <div class="mb-4 inline-block p-3 rounded-full bg-indigo-900/40 border border-indigo-300/20 shadow-[0_0_30px_rgba(99,102,241,0.3)]">
+                <!-- Star Icon -->
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-8 h-8 text-indigo-300 drop-shadow-[0_0_10px_rgba(165,180,252,0.8)]" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M12 .587l3.668 7.568 8.332 1.151-6.064 5.828 1.48 8.279-7.416-3.967-7.417 3.967 1.481-8.279-6.064-5.828 8.332-1.151z"/>
+                </svg>
+            </div>
+
+            <h2 id="welcome-name" class="title-font text-3xl md:text-4xl mb-2 text-glow text-white"></h2>
+            
+            <p class="serif-font text-lg md:text-xl italic text-indigo-200 mb-6 tracking-wide">
+                Your Cosmic Snapshot
+            </p>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 w-full">
+                <!-- Moon Phase Card -->
+                <div class="bg-black/40 p-5 rounded-2xl border border-white/10 relative overflow-hidden group text-left">
+                    <div class="absolute inset-0 bg-gradient-to-br from-indigo-500/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                    <p class="text-xs text-indigo-300 uppercase tracking-widest mb-1">Lunar Phase</p>
+                    <h3 class="title-font text-xl text-white mb-2" id="moon-phase-title"></h3>
+                    <p class="font-light text-indigo-100 text-sm leading-relaxed" id="moon-phase-desc"></p>
+                </div>
+
+                <!-- Orbits Card -->
+                <div class="bg-black/40 p-5 rounded-2xl border border-white/10 relative overflow-hidden group text-left">
+                    <div class="absolute inset-0 bg-gradient-to-br from-purple-500/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                    <p class="text-xs text-indigo-300 uppercase tracking-widest mb-1">Solar Journey</p>
+                    <h3 class="title-font text-xl text-white mb-2" id="orbit-title"></h3>
+                    <p class="font-light text-indigo-100 text-sm leading-relaxed" id="orbit-desc"></p>
+                </div>
+
+                <!-- Deep Sky Object Card (Spans full width) -->
+                <div class="bg-black/40 p-5 rounded-2xl border border-white/10 relative overflow-hidden group text-left md:col-span-2">
+                    <div class="absolute inset-0 bg-gradient-to-br from-blue-500/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                    <p class="text-xs text-indigo-300 uppercase tracking-widest mb-1">Birth Month Sky Feature</p>
+                    <h3 class="title-font text-xl text-white mb-2" id="deep-sky-title"></h3>
+                    <p class="font-light text-indigo-100 text-sm leading-relaxed" id="deep-sky-desc"></p>
+                </div>
+
+                <!-- Romantic Shayari Card (Spans full width) -->
+                <div class="bg-black/40 p-6 rounded-2xl border border-pink-500/20 relative overflow-hidden group text-center md:col-span-2 mt-2 shadow-[0_0_15px_rgba(236,72,153,0.15)]">
+                    <div class="absolute inset-0 bg-gradient-to-t from-pink-500/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700"></div>
+                    <p class="text-xs text-pink-300/80 uppercase tracking-widest mb-3">A Message from the Stars</p>
+                    <p class="font-light text-white text-lg md:text-2xl leading-relaxed italic text-glow" style="font-family: 'Cormorant Garamond', serif;">
+                        "ख़ामोश रात में एक सितारा कुछ यूँ चमकता है,<br>
+                        जैसे तेरे ख़याल का नूर मेरे आसमान में बसता है। ✨"
+                    </p>
+                </div>
+            </div>
+
+            <div class="mt-8">
+                <p class="text-xs text-indigo-300/60 uppercase tracking-widest">Enjoy the music & the celestial view</p>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        // Real Astronomy Data: Deep Sky Objects prominent in specific months
+        const deepSkyObjects = [
+            { name: "The Orion Nebula", desc: "A breathtaking stellar nursery visible in January skies. It reminds us that even in the vast dark, beautiful new stars are constantly being born." },
+            { name: "The Rosette Nebula", desc: "A cosmic rose blooming 5,000 light-years away in February's sky. A majestic, glowing testament to romance written in stardust." },
+            { name: "The Sombrero Galaxy", desc: "A brilliant, glowing ring of dust and stars. Your March birth aligns with this magnificent jewel of the cosmos." },
+            { name: "The Virgo Cluster", desc: "A massive gathering of thousands of galaxies. An April sky bursting with the collective light of a trillion stars." },
+            { name: "Omega Centauri", desc: "A glittering globe of 10 million ancient stars. Your May arrival happened under the watch of our galaxy's grandest star cluster." },
+            { name: "The Eagle Nebula", desc: "Home to the famous 'Pillars of Creation'. Your June birth shares the sky with this iconic, towering cathedral of interstellar gas and dust." },
+            { name: "The Galactic Center", desc: "The brilliant, glowing heart of our Milky Way is best seen in July. A dense, romantic core of glowing ancient stars." },
+            { name: "The Perseus Double Cluster", desc: "Twin clusters of young, supergiant stars glittering like diamonds in the August night. A beautiful cosmic pairing." },
+            { name: "The Andromeda Galaxy", desc: "Our closest galactic neighbor. The light arriving from Andromeda in September has traveled 2.5 million years just to shine on you." },
+            { name: "The Pleiades", desc: "The 'Seven Sisters' star cluster. An exquisite, glowing gathering of young blue stars in October that have captivated lovers for millennia." },
+            { name: "The Crab Nebula", desc: "The expanding, beautiful remnant of an exploded star. A November spectacle of cosmic transformation and vibrant energy." },
+            { name: "The Tarantula Nebula", desc: "The most active starburst region in our cosmic neighborhood. A December sky filled with fierce, magnificent cosmic creation." }
+        ];
+
+        // Calculate approximate Moon Phase for a given date
+        function getMoonPhase(year, month, day) {
+            let c = 0, e = 0, jd = 0, b = 0;
+            if (month < 3) {
+                year--;
+                month += 12;
+            }
+            ++month;
+            c = 365.25 * year;
+            e = 30.6 * month;
+            jd = c + e + day - 694039.09; // Total days elapsed
+            jd /= 29.5305882; // Divide by the lunar cycle
+            b = parseInt(jd); 
+            jd -= b; 
+            b = Math.round(jd * 8); 
+            if (b >= 8) b = 0; 
+            
+            const phases = [
+                { name: "New Moon", desc: "A time of dark, pristine skies perfectly suited for deep-space stargazing." },
+                { name: "Waxing Crescent", desc: "A beautiful sliver of silver light gathering energy in the night sky." },
+                { name: "First Quarter", desc: "A striking half-illuminated moon, displaying a perfect balance of cosmic light and shadow." },
+                { name: "Waxing Gibbous", desc: "An almost full moon, radiating growing lunar energy into the romantic night." },
+                { name: "Full Moon", desc: "Brilliant and whole. The night sky was completely illuminated by the sun's reflection." },
+                { name: "Waning Gibbous", desc: "The moon beginning its quiet retreat, offering a silvery glow that blends perfectly with starlight." },
+                { name: "Third Quarter", desc: "A beautifully illuminated half-moon marking a time of cosmic reflection." },
+                { name: "Waning Crescent", desc: "A quiet, fading sliver before the lunar cycle renews. A deeply peaceful sky." }
+            ];
+            return phases[b];
+        }
+
+        function enterParty() {
+            const nameInput = document.getElementById('name').value.trim();
+            const dobInput = document.getElementById('dob').value;
+            const errorMsg = document.getElementById('error-msg');
+
+            // Validation
+            if (!nameInput || !dobInput) {
+                errorMsg.classList.remove('hidden');
+                return;
+            }
+            errorMsg.classList.add('hidden');
+
+            // Extract DOB
+            const birthDate = new Date(dobInput);
+            const day = birthDate.getDate();
+            const month = birthDate.getMonth(); // 0-11
+            const year = birthDate.getFullYear();
+
+            // 1. Astronomy Math: Deep Sky Object based on Month
+            const deepSkyInfo = deepSkyObjects[month];
+
+            // 2. Astronomy Math: Moon Phase
+            const moonPhaseInfo = getMoonPhase(year, month + 1, day);
+
+            // 3. Astronomy Math: Orbits around the Sun (Age with decimals)
+            const today = new Date();
+            const msInYear = 1000 * 60 * 60 * 24 * 365.25;
+            const orbits = ((today - birthDate) / msInYear).toFixed(2);
+
+            // Populate Party Screen
+            document.getElementById('welcome-name').innerText = `Welcome, ${nameInput}`;
+            
+            // Populate Cards
+            document.getElementById('moon-phase-title').innerText = moonPhaseInfo.name;
+            document.getElementById('moon-phase-desc').innerText = moonPhaseInfo.desc;
+            
+            document.getElementById('orbit-title').innerText = `${orbits} Orbits`;
+            document.getElementById('orbit-desc').innerText = `Since you arrived, you have completed exactly ${orbits} journeys around the Sun on our beautiful spaceship Earth.`;
+            
+            document.getElementById('deep-sky-title').innerText = deepSkyInfo.name;
+            document.getElementById('deep-sky-desc').innerText = deepSkyInfo.desc;
+
+            // Handle Audio (Autoplay after user interaction)
+            const bgAudio = document.getElementById('background-music');
+            bgAudio.volume = 0.5; // Set a romantic, comfortable volume
+            bgAudio.play().catch(error => {
+                console.log("Audio autoplay was prevented by the browser.", error);
+            });
+
+            // Transition Screens
+            const entryScreen = document.getElementById('entry-screen');
+            const partyScreen = document.getElementById('party-screen');
+
+            // Fade out entry
+            entryScreen.classList.remove('fade-in', 'z-10');
+            entryScreen.classList.add('fade-out', 'z-0');
+
+            // Wait a moment for effect, then fade in party screen
+            setTimeout(() => {
+                partyScreen.classList.remove('fade-out', 'z-0');
+                partyScreen.classList.add('fade-in', 'z-10');
+            }, 600);
+        }
+    </script>
+</body>
+</html>
